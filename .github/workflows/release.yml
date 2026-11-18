@@ -15,8 +15,8 @@ jobs:
     runs-on: windows-latest
 
     env:
-      VITE_SITE_URL: https://halles-des-douze.fr
-      VITE_SOCKET_URL: https://halles-des-douze.fr
+      VITE_SITE_URL: https://www.halles-des-douze.fr
+      VITE_SOCKET_URL: https://www.halles-des-douze.fr
       VITE_SOCKET_PATH: /socket.io
 
     steps:
