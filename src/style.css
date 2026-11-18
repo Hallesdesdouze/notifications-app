@@ -1,0 +1,253 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --lime: #84cc16;
+    --lime-dark: #65a30d;
+    --slate-50: #f8fafc;
+    --slate-200: #e2e8f0;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-800: #1e293b;
+    --red: #ef4444;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    font-size: 14px;
+    color: var(--slate-800);
+    background: #fff;
+}
+
+body {
+    user-select: none;
+    overflow: hidden;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 20px;
+    gap: 16px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: .375rem;
+    background: var(--lime);
+    color: #fff;
+    font-weight: 700;
+}
+
+.logo img {
+    width: 100%;
+    height: auto;
+    border-radius: .375rem;
+}
+
+h1 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--slate-500);
+}
+
+.subtitle,
+.muted {
+    color: var(--slate-500);
+    font-size: 12px;
+}
+
+.small {
+    font-size: 11px;
+}
+
+.screen {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1;
+    min-height: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.error {
+    padding: 10px;
+    border-radius: 6px;
+    background: #fef2f2;
+    color: var(--red);
+    font-size: 12px;
+}
+
+.btn {
+    cursor: pointer;
+    padding: 9px 14px;
+    border: 1px solid var(--slate-200);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--slate-600);
+    font: inherit;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.btn:hover {
+    border-color: var(--slate-400);
+}
+
+.btn.primary {
+    border-color: var(--lime);
+    background: var(--lime);
+    color: #fff;
+    font-weight: 500;
+}
+
+.btn.primary:hover {
+    background: var(--lime-dark);
+}
+
+.btn.ghost {
+    border-color: transparent;
+}
+
+.btn.danger {
+    color: var(--red);
+    margin-top: auto;
+}
+
+.row {
+    display: flex;
+    gap: 8px;
+}
+
+.code {
+    padding: 14px;
+    border: 1px solid var(--slate-200);
+    border-radius: 6px;
+    background: var(--slate-50);
+    text-align: center;
+    font-family: Consolas, monospace;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid var(--slate-200);
+    border-radius: 8px;
+}
+
+.user img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--slate-200);
+}
+
+.user-name {
+    font-weight: 600;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--slate-500);
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--slate-400);
+}
+
+.dot.online {
+    background: var(--lime);
+}
+
+.dot.offline {
+    background: var(--red);
+}
+
+.toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--slate-600);
+}
+
+.toggle input {
+    accent-color: var(--lime);
+    width: 16px;
+    height: 16px;
+}
+
+.history {
+    list-style: none;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    border: 1px solid var(--slate-200);
+    border-radius: 8px;
+}
+
+.history li {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--slate-200);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.history li:last-child {
+    border-bottom: none;
+}
+
+.history li.clickable {
+    cursor: pointer;
+}
+
+.history li.clickable:hover {
+    background: var(--slate-50);
+}
+
+.history li.empty {
+    color: var(--slate-400);
+    text-align: center;
+    padding: 24px 12px;
+}
+
+.history time {
+    display: block;
+    color: var(--slate-400);
+    font-size: 11px;
+    margin-bottom: 2px;
+}

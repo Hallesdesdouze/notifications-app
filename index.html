@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Halles des Douze - Notifications</title>
+    <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+    <main id="app">
+        <header class="header">
+            <div class="logo">
+                <img src="/src/logo.png" alt="Halles des Douze">
+            </div>
+            <div>
+                <h1>Halles des Douze - Notifications</h1>
+                <p class="subtitle">Notifications de bureau</p>
+            </div>
+        </header>
+
+        <section id="screen-loading" class="screen">
+            <p class="muted">Chargement…</p>
+        </section>
+
+        <section id="screen-login" class="screen hidden">
+            <p>Connectez cette application à votre compte pour recevoir vos notifications, même navigateur fermé.</p>
+            <p id="login-error" class="error hidden"></p>
+            <button id="btn-link" class="btn primary">Se connecter avec le site</button>
+        </section>
+
+        <section id="screen-linking" class="screen hidden">
+            <p>Une page s'est ouverte dans votre navigateur. Vérifiez que le code est identique, puis cliquez sur <strong>Autoriser</strong>.</p>
+            <div id="link-code" class="code">---</div>
+            <p class="muted small">En attente de validation…</p>
+            <div class="row">
+                <button id="btn-reopen" class="btn">Rouvrir la page</button>
+                <button id="btn-cancel" class="btn ghost">Annuler</button>
+            </div>
+        </section>
+
+        <section id="screen-connected" class="screen hidden">
+            <div class="user">
+                <img id="user-avatar" alt="" />
+                <div>
+                    <div id="user-name" class="user-name"></div>
+                    <div class="status">
+                        <span id="status-dot" class="dot"></span>
+                        <span id="status-text">Connexion…</span>
+                    </div>
+                </div>
+            </div>
+
+            <label class="toggle">
+                <input type="checkbox" id="opt-autostart" />
+                <span>Lancer au démarrage de Windows</span>
+            </label>
+
+            <h2>Dernières notifications</h2>
+            <ul id="history" class="history">
+                <li class="empty">Aucune notification pour le moment.</li>
+            </ul>
+
+            <button id="btn-logout" class="btn ghost danger">Déconnecter cet appareil</button>
+        </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

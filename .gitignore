@@ -1,0 +1,32 @@
+# Dépendances
+node_modules/
+
+# Build du front
+dist/
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# Environnement : seul .env.example est publié
+.env
+.env.*
+!.env.example
+
+# Clés de signature (updater, certificat de code) : ne jamais commiter
+*.key
+*.key.pub
+*.pem
+*.pfx
+*.p12
+
+# Logs
+*.log
+npm-debug.log*
+
+# Éditeurs / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
