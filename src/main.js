@@ -1,5 +1,7 @@
 import { io } from "socket.io-client";
 import { invoke } from "@tauri-apps/api/core";
+// fetch côté Rust : pas de CORS entre l'app (tauri.localhost) et le site
+import { fetch } from "@tauri-apps/plugin-http";
 import { load } from "@tauri-apps/plugin-store";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { enable, disable, isEnabled } from "@tauri-apps/plugin-autostart";
@@ -15,6 +17,7 @@ const SOCKET_PATH = import.meta.env.VITE_SOCKET_PATH ?? "/socket.io";
 
 const LINK_TIMEOUT_MS = 10 * 60 * 1000;
 const LINK_POLL_MS = 2000;
+const LINK_NETWORK_ERRORS_BEFORE_WARNING = 3;
 const TOAST_GROUP_WINDOW_MS = 1500; // fenêtre de regroupement
 const TOAST_GROUP_THRESHOLD = 3;    // au-delà : une seule notif récapitulative
 const HISTORY_MAX = 30;
@@ -31,6 +34,7 @@ const els = {
     loginError: $("login-error"),
     btnLink: $("btn-link"),
     linkCode: $("link-code"),
+    linkStatus: $("link-status"),
     btnReopen: $("btn-reopen"),
     btnCancel: $("btn-cancel"),
     avatar: $("user-avatar"),
@@ -101,10 +105,14 @@ async function fetchMe(token) {
         });
 
         if (response.status === 401) return "unauthorized";
-        if (!response.ok) return null;
+        if (!response.ok) {
+            console.error(`GET /api/desktop/me : HTTP ${response.status}`);
+            return null;
+        }
 
         return await response.json();
-    } catch {
+    } catch (err) {
+        console.error("GET /api/desktop/me : erreur réseau", err);
         return null;
     }
 }
@@ -130,12 +138,15 @@ async function startLinking() {
     const url = `${SITE_URL}/mon-compte/app/lier?h=${hash}&name=${encodeURIComponent(deviceName)}`;
 
     els.linkCode.textContent = formatCode(hash);
+    els.linkStatus.textContent = "En attente de validation…";
+    els.linkStatus.classList.remove("error");
     els.btnReopen.onclick = () => openUrl(url);
     showScreen("linking");
 
     await openUrl(url);
 
     const startedAt = Date.now();
+    let networkErrors = 0;
     clearInterval(pollTimer);
 
     pollTimer = setInterval(async () => {
@@ -146,7 +157,24 @@ async function startLinking() {
 
         const me = await fetchMe(token);
 
-        if (me && me !== "unauthorized") {
+        // Erreur réseau répétée : on le dit au lieu d'attendre sans fin
+        if (me === null) {
+            networkErrors += 1;
+
+            if (networkErrors >= LINK_NETWORK_ERRORS_BEFORE_WARNING) {
+                els.linkStatus.textContent = `Impossible de joindre ${SITE_URL}. Nouvelle tentative…`;
+                els.linkStatus.classList.add("error");
+            }
+            return;
+        }
+
+        if (networkErrors > 0) {
+            networkErrors = 0;
+            els.linkStatus.textContent = "En attente de validation…";
+            els.linkStatus.classList.remove("error");
+        }
+
+        if (me !== "unauthorized") {
             clearInterval(pollTimer);
             await store.set("token", token);
             await store.set("user", me.user);
