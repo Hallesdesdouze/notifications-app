@@ -218,10 +218,10 @@ Construit avec [Tauri 2](https://tauri.app) : l'application pèse quelques méga
 
 ## Publier une version
 
-1. Mettez à jour `"version"` dans `src-tauri/tauri.conf.json` (par exemple `0.2.0`).
+1. Mettez à jour `"version"` dans `src-tauri/tauri.conf.json` (par exemple `0.2.1`).
 2. Commitez, créez le tag correspondant et poussez :
    ```
-   git tag v0.2.0
+   git tag v0.2.1
    git push origin main --tags
    ```
 3. GitHub Actions compile l'installeur, génère l'attestation de provenance et les empreintes SHA-256, puis crée une **release en brouillon**.
