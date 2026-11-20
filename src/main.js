@@ -488,7 +488,7 @@ async function startLinking() {
         deviceName = await invoke("device_name");
     } catch {}
 
-    const url = `${SITE_URL}/desktop/link?h=${hash}&name=${encodeURIComponent(deviceName)}`;
+    const url = `${SITE_URL}/mon-compte/app/lier?h=${hash}&name=${encodeURIComponent(deviceName)}`;
 
     els.linkCode.textContent = formatCode(hash);
     els.linkStatus.textContent = "En attente de validation…";
