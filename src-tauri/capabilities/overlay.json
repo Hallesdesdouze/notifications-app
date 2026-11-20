@@ -1,0 +1,10 @@
+{
+    "$schema": "../gen/schemas/desktop-schema.json",
+    "identifier": "overlay",
+    "description": "Permissions de l'overlay de notifications (affichage + ouverture du lien au clic)",
+    "windows": ["overlay"],
+    "permissions": [
+        "core:default",
+        "opener:default"
+    ]
+}

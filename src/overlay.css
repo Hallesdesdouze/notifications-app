@@ -1,0 +1,154 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    overflow: hidden;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    user-select: none;
+}
+
+#stack {
+    box-sizing: border-box;
+    width: 360px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 34px 14px 12px;
+    border-radius: 10px;
+    border-left: 3px solid #84cc16;
+    background: rgba(17, 24, 39, 0.95);
+    color: #f1f5f9;
+    overflow: hidden;
+    cursor: pointer;
+    animation: enter-right 0.22s ease-out;
+}
+
+body[data-corner$="left"] .card {
+    animation-name: enter-left;
+}
+
+.card.leaving {
+    animation: leave-right 0.2s ease-in forwards;
+    pointer-events: none;
+}
+
+body[data-corner$="left"] .card.leaving {
+    animation-name: leave-left;
+}
+
+.card:hover {
+    background: rgba(30, 41, 59, 0.97);
+}
+
+.card.type-success { --accent: #84cc16; }
+.card.type-info    { --accent: #38bdf8; }
+.card.type-warning { --accent: #f59e0b; }
+.card.type-error   { --accent: #ef4444; }
+
+.card {
+    border-left-color: var(--accent, #84cc16);
+}
+
+.progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    transform-origin: left;
+    animation: progress var(--duration, 6s) linear forwards;
+    background: var(--accent, #84cc16);
+    opacity: 0.75;
+}
+
+.logo {
+    flex: none;
+    width: 32px;
+    height: 32px;
+}
+
+.logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.content {
+    flex: 1;
+    min-width: 0;
+}
+
+.title {
+    margin-bottom: 2px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #a3e635;
+}
+
+.message {
+    font-size: 13px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.close {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.card:hover .progress {
+    animation-play-state: paused;
+}
+
+@keyframes progress {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
+
+@keyframes enter-right {
+    from { opacity: 0; transform: translateX(24px); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes enter-left {
+    from { opacity: 0; transform: translateX(-24px); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes leave-right {
+    to { opacity: 0; transform: translateX(24px); }
+}
+
+@keyframes leave-left {
+    to { opacity: 0; transform: translateX(-24px); }
+}

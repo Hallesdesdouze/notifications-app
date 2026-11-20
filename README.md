@@ -11,6 +11,7 @@ Elle se place dans la zone de notification, à côté de l'horloge, et affiche u
 ## Sommaire
 
 - [Pourquoi cette application ?](#pourquoi-cette-application-)
+- [Fonctionnalités](#fonctionnalités)
 - [Installation](#installation)
 - [Vérifier l'installeur](#vérifier-linstalleur)
 - [Fonctionnement](#fonctionnement)
@@ -34,6 +35,19 @@ Pour éviter les doublons, elle **se tait automatiquement dès que le site est o
 | Le site est affiché à l'écran | Le site (message dans la page) |
 | Le site est ouvert mais réduit ou dans un autre onglet | Le navigateur (Web Push) |
 | Le site est fermé | **Cette application** |
+
+---
+
+## Fonctionnalités
+
+- **Deux styles de notification**, au choix :
+  - **Personnalisée** : une carte s'affiche par-dessus tout, comme sur Steam, dans le coin de l'écran de votre choix. Elle reste affichée tant que la souris est dessus, et un clic ouvre la bonne page du site.
+  - **Windows** : la notification système classique.
+- **Son de notification** dans les deux modes : un son par défaut ou votre propre fichier `.ogg` ou `.wav` (2 Mo maximum), avec réglage du volume. Vous pouvez couper le son depuis l'application ou par un clic droit sur l'icône de la zone de notification (**Couper le son**).
+- **Historique des 10 derniers jours**, groupé par jour, avec lien vers le site pour chaque notification.
+- **Regroupement** : une rafale de notifications devient une seule carte « X nouvelles notifications ».
+
+> **Jeux en plein écran** : la notification personnalisée s'affiche par-dessus les jeux en mode *fenêtré sans bordure* (« plein écran fenêtré »), mais pas en plein écran *exclusif*. Dans ce dernier cas, seul le son est entendu. Choisissez le mode fenêtré sans bordure dans les options du jeu si vous voulez voir les notifications.
 
 ---
 
@@ -102,8 +116,8 @@ Vous pouvez déconnecter un appareil à tout moment, depuis l'application (**Dé
 L'application maintient une connexion WebSocket (Socket.IO) avec le serveur du site et écoute les notifications qui vous sont destinées.
 
 - **Regroupement** : si plusieurs notifications arrivent en même temps, elles sont regroupées en une seule (« 12 nouvelles notifications ») pour ne pas inonder Windows.
-- **Historique** : les dernières notifications s'affichent dans la fenêtre de l'application, **en mémoire uniquement**. Elles disparaissent quand l'application est quittée.
-- **PC éteint ou hors ligne** : les notifications reçues pendant ce temps sont perdues. Rien n'est stocké en attente.
+- **Historique** : chaque notification reçue est enregistrée **sur votre PC uniquement** pendant 10 jours. Le serveur, lui, ne conserve rien.
+- **PC éteint ou application fermée** : les notifications envoyées pendant ce temps ne sont ni affichées ni ajoutées à l'historique. Rien n'est stocké en attente.
 
 ---
 
@@ -112,7 +126,13 @@ L'application maintient une connexion WebSocket (Socket.IO) avec le serveur du s
 **Ce que l'application stocke sur votre PC**, dans `%APPDATA%\fr.halles-des-douze.notifier\settings.json` :
 
 - votre jeton de connexion ;
-- votre pseudo et votre avatar, pour l'affichage.
+- votre pseudo et votre avatar, pour l'affichage ;
+- vos réglages (type de notification, emplacement, son, volume).
+
+Dans le même dossier :
+
+- `history.jsonl` : l'**historique des notifications reçues**, en clair, conservé **10 jours** puis supprimé automatiquement. Le bouton **Vider** de l'onglet Historique l'efface immédiatement ;
+- `sounds\` : une **copie** de votre son personnalisé, si vous en avez choisi un.
 
 **Ce que le serveur enregistre :**
 
@@ -152,8 +172,8 @@ npm install
 Copiez `.env.example` en `.env` et adaptez les URL si besoin :
 
 ```
-VITE_SITE_URL=https://halles-des-douze.fr
-VITE_SOCKET_URL=https://halles-des-douze.fr
+VITE_SITE_URL=https://www.halles-des-douze.fr
+VITE_SOCKET_URL=https://www.halles-des-douze.fr
 VITE_SOCKET_PATH=/socket.io
 ```
 
@@ -176,12 +196,16 @@ L'installeur est généré dans `src-tauri/target/release/bundle/nsis/`.
 ### Structure du projet
 
 ```
-├── index.html                  Interface de l'application
+├── index.html                  Fenêtre principale (accueil, historique, paramètres)
+├── overlay.html                Fenêtre transparente des notifications personnalisées
+├── public/sounds/notification.ogg   Son par défaut
 ├── src/
-│   ├── main.js                 Connexion, liaison du compte, notifications
-│   └── style.css
+│   ├── main.js                 Connexion, liaison du compte, réception, son, historique
+│   ├── overlay.js              Affichage des cartes de notification
+│   ├── style.css
+│   └── overlay.css
 ├── src-tauri/
-│   ├── src/lib.rs              Icône de la zone de notification, démarrage auto, instance unique
+│   ├── src/lib.rs              Icône et menu, overlay, historique sur 10 jours, son personnalisé
 │   ├── tauri.conf.json         Configuration de l'application et de l'installeur
 │   └── capabilities/           Permissions accordées à l'interface (liste minimale)
 └── .github/workflows/

@@ -12,22 +12,26 @@
             <div class="logo">
                 <img src="/src/logo.png" alt="Halles des Douze">
             </div>
-            <div>
+            <div class="header-text">
                 <h1>Halles des Douze - Notifications</h1>
                 <p class="subtitle">Notifications de bureau</p>
             </div>
+            <button id="btn-mute" class="icon-btn" type="button" title="Couper le son">🔊</button>
         </header>
 
+        <!-- ================= Chargement ================= -->
         <section id="screen-loading" class="screen">
             <p class="muted">Chargement…</p>
         </section>
 
+        <!-- ================= Connexion ================= -->
         <section id="screen-login" class="screen hidden">
             <p>Connectez cette application à votre compte pour recevoir vos notifications, même navigateur fermé.</p>
             <p id="login-error" class="error hidden"></p>
             <button id="btn-link" class="btn primary">Se connecter avec le site</button>
         </section>
 
+        <!-- ================= Liaison en cours ================= -->
         <section id="screen-linking" class="screen hidden">
             <p>Une page s'est ouverte dans votre navigateur. Vérifiez que le code est identique, puis cliquez sur <strong>Autoriser</strong>.</p>
             <div id="link-code" class="code">---</div>
@@ -38,29 +42,106 @@
             </div>
         </section>
 
+        <!-- ================= Connecté ================= -->
         <section id="screen-connected" class="screen hidden">
-            <div class="user">
-                <img id="user-avatar" alt="" />
-                <div>
-                    <div id="user-name" class="user-name"></div>
-                    <div class="status">
-                        <span id="status-dot" class="dot"></span>
-                        <span id="status-text">Connexion…</span>
+            <nav class="tabs">
+                <button class="tab active" data-tab="home" type="button">Accueil</button>
+                <button class="tab" data-tab="history" type="button">Historique</button>
+                <button class="tab" data-tab="settings" type="button">Paramètres</button>
+            </nav>
+
+            <!-- ----- Accueil ----- -->
+            <div id="tab-home" class="panel">
+                <div class="user">
+                    <img id="user-avatar" alt="" />
+                    <div>
+                        <div id="user-name" class="user-name"></div>
+                        <div class="status">
+                            <span id="status-dot" class="dot"></span>
+                            <span id="status-text">Connexion…</span>
+                        </div>
                     </div>
                 </div>
+
+                <p id="site-open-hint" class="hint hidden">
+                    Le site est ouvert dans un navigateur : c'est lui qui vous notifie, l'application reste silencieuse.
+                </p>
+
+                <label class="toggle">
+                    <input type="checkbox" id="opt-autostart" />
+                    <span>Lancer au démarrage de Windows</span>
+                </label>
+
+                <button id="btn-test" class="btn">Envoyer une notification de test</button>
+
+                <button id="btn-logout" class="btn ghost danger push-bottom">Déconnecter cet appareil</button>
             </div>
 
-            <label class="toggle">
-                <input type="checkbox" id="opt-autostart" />
-                <span>Lancer au démarrage de Windows</span>
-            </label>
+            <!-- ----- Historique ----- -->
+            <div id="tab-history" class="panel hidden">
+                <div class="panel-head">
+                    <span id="history-count" class="muted small"></span>
+                    <button id="btn-clear-history" class="btn small ghost danger">Vider</button>
+                </div>
+                <div id="history" class="history"></div>
+                <p class="muted small">Les notifications reçues sont conservées 10 jours sur cet ordinateur.</p>
+            </div>
 
-            <h2>Dernières notifications</h2>
-            <ul id="history" class="history">
-                <li class="empty">Aucune notification pour le moment.</li>
-            </ul>
+            <!-- ----- Paramètres ----- -->
+            <div id="tab-settings" class="panel hidden">
+                <fieldset class="group">
+                    <legend>Type de notification</legend>
+                    <label class="radio">
+                        <input type="radio" name="mode" value="custom" />
+                        <span><strong>Personnalisée</strong> : s'affiche par-dessus tout, comme Steam</span>
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="mode" value="windows" />
+                        <span><strong>Windows</strong> : notification système classique</span>
+                    </label>
+                </fieldset>
 
-            <button id="btn-logout" class="btn ghost danger">Déconnecter cet appareil</button>
+                <fieldset id="corner-group" class="group">
+                    <legend>Emplacement à l'écran</legend>
+                    <div class="screen-preview">
+                        <button class="corner-btn" data-corner="top-left" type="button" title="En haut à gauche"></button>
+                        <button class="corner-btn" data-corner="top-right" type="button" title="En haut à droite"></button>
+                        <button class="corner-btn" data-corner="bottom-left" type="button" title="En bas à gauche"></button>
+                        <button class="corner-btn" data-corner="bottom-right" type="button" title="En bas à droite"></button>
+                    </div>
+                </fieldset>
+
+                <fieldset class="group">
+                    <legend>Son</legend>
+
+                    <label class="radio">
+                        <input type="radio" name="sound-source" value="default" />
+                        <span>Son par défaut</span>
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="sound-source" value="custom" />
+                        <span>Mon fichier : <em id="sound-file-name">aucun</em></span>
+                    </label>
+                    <button id="btn-choose-sound" class="btn small" type="button">Choisir un fichier .ogg ou .wav…</button>
+                    <p id="sound-error" class="error hidden"></p>
+
+                    <div class="volume">
+                        <span>Volume</span>
+                        <input type="range" id="sound-volume" min="0" max="100" step="5" />
+                        <span id="sound-volume-value" class="volume-value">60 %</span>
+                    </div>
+
+                    <label class="toggle">
+                        <input type="checkbox" id="sound-muted" />
+                        <span>Couper le son</span>
+                    </label>
+
+                    <p id="windows-sound-hint" class="hint hidden">
+                        En mode Windows, le système peut jouer son propre son en plus. Pour le désactiver :
+                        Paramètres Windows → Système → Notifications → Halles des Douze → « Émettre un son ».
+                    </p>
+                </fieldset>
+            </div>
         </section>
     </main>
 
